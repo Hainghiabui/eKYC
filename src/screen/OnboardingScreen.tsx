@@ -73,7 +73,7 @@ const OnboardingScreen = () => {
                 useNativeDriver: true,
             }),
         ]).start(() => {
-            navigation.navigate('GetStarted');
+            // navigation.navigate('GetStartedScreen');
         });
     };
 
