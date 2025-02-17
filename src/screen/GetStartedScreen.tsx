@@ -7,50 +7,53 @@ import {
     TouchableOpacity,
     SafeAreaView,
     Pressable,
+    Dimensions,
+    Animated,
 } from 'react-native';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
+import LinearGradient from 'react-native-linear-gradient';
+
+const { width, height } = Dimensions.get('window');
 
 const options = [
-    'Spend or save daily',
-    'Spend while travelling',
-    'Send and manage money',
-    'Gain exposure to financial assets',
-    'Others',
+    'Chi tiêu hoặc tiết kiệm hàng ngày',
+    'Chi tiêu khi đi du lịch',
+    'Gửi và quản lý tiền',
+    'Tiếp cận các tài sản tài chính',
+    'Khác',
 ];
 
 const GetStartedScreen = () => {
-    const [ selectedOptions, setSelectedOptions ] = useState<number[]>([ 2 ]);
+    const [ selectedOption, setSelectedOption ] = useState<number>(2);
     const navigation = useNavigation<NavigationProp<any>>();
 
     const handleContinue = () => {
-        if (selectedOptions.length > 0) {
-            navigation.navigate('NextScreen', {
-                reasons: selectedOptions.map(index => options[ index ]),
-            });
+        if (selectedOption !== null) {
+
         }
     };
 
     const toggleOption = (index: number) => {
-        setSelectedOptions(prevSelectedOptions =>
-            prevSelectedOptions.includes(index)
-                ? prevSelectedOptions.filter(option => option !== index)
-                : [ ...prevSelectedOptions, index ]
-        );
+        setSelectedOption(index);
     };
 
     return (
         <SafeAreaView style={styles.container}>
+            <LinearGradient
+                colors={[ '#ffffff', '#f8faff' ]}
+                style={StyleSheet.absoluteFill}
+            />
             <TouchableOpacity
                 style={styles.backButton}
                 onPress={() => navigation.goBack()}
             >
-                <FontAwesome6 name="arrow-left-long" size={24} />
+                <FontAwesome6 name="arrow-left-long" size={24} color="#1e40af" />
             </TouchableOpacity>
 
             <View style={styles.content}>
-                <Text style={styles.title}>Get started</Text>
+                <Text style={styles.title}>Bắt đầu</Text>
                 <Text style={styles.subtitle}>
-                    Tell us the main reason for using the FintechX application please.
+                    Hãy cho chúng tôi biết lý do chính bạn sử dụng ứng dụng FintechX.
                 </Text>
 
                 <View style={styles.optionsContainer}>
@@ -59,19 +62,33 @@ const GetStartedScreen = () => {
                             key={index}
                             style={[
                                 styles.optionButton,
-                                selectedOptions.includes(index) && styles.optionButtonSelected,
+                                selectedOption === index && styles.optionButtonSelected,
                             ]}
                             onPress={() => toggleOption(index)}
                         >
-                            <View
-                                style={[
-                                    styles.checkbox,
-                                    selectedOptions.includes(index) && styles.checkboxSelected,
-                                ]}
+                            <LinearGradient
+                                colors={selectedOption === index
+                                    ? [ 'rgba(59,130,246,0.1)', 'rgba(59,130,246,0.05)' ]
+                                    : [ '#f8faff', '#F3F8FF' ]}
+                                style={styles.optionGradient}
                             >
-                                {selectedOptions.includes(index) && <View style={styles.checkboxInner} />}
-                            </View>
-                            <Text style={styles.optionText}>{option}</Text>
+                                <View
+                                    style={[
+                                        styles.checkbox,
+                                        selectedOption === index && styles.checkboxSelected,
+                                    ]}
+                                >
+                                    {selectedOption === index && (
+                                        <FontAwesome6 name="check" size={12} color="#ffffff" />
+                                    )}
+                                </View>
+                                <Text style={[
+                                    styles.optionText,
+                                    selectedOption === index && styles.optionTextSelected
+                                ]}>
+                                    {option}
+                                </Text>
+                            </LinearGradient>
                         </Pressable>
                     ))}
                 </View>
@@ -81,18 +98,25 @@ const GetStartedScreen = () => {
                         style={styles.skipButton}
                         onPress={() => navigation.navigate('NextScreen')}
                     >
-                        <Text style={styles.skipButtonText}>SKIP</Text>
+                        <Text style={styles.skipButtonText}>BỎ QUA</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity
                         style={[
                             styles.continueButton,
-                            selectedOptions.length === 0 && styles.continueButtonDisabled,
+                            selectedOption === null && styles.continueButtonDisabled,
                         ]}
                         onPress={handleContinue}
-                        disabled={selectedOptions.length === 0}
+                        disabled={selectedOption === null}
                     >
-                        <Text style={styles.continueButtonText}>CONTINUE</Text>
+                        <LinearGradient
+                            colors={[ '#1e40af', '#3b82f6' ]}
+                            start={{ x: 0, y: 0 }}
+                            end={{ x: 1, y: 0 }}
+                            style={styles.gradientButton}
+                        >
+                            <Text style={styles.continueButtonText}>TIẾP TỤC</Text>
+                        </LinearGradient>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -106,103 +130,108 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFFFFF',
     },
     backButton: {
-        padding: 16,
+        padding: width * 0.04,
         position: 'absolute',
         top: 0,
         left: 0,
         zIndex: 1,
     },
-    backButtonText: {
-        fontSize: 24,
-        color: '#000000',
-    },
     content: {
         flex: 1,
-        paddingHorizontal: 24,
-        paddingTop: 100,
+        paddingHorizontal: width * 0.06,
+        paddingTop: height * 0.08,
     },
     title: {
-        fontSize: 32,
+        fontSize: width * 0.08,
         fontWeight: 'bold',
-        marginBottom: 8,
-        color: '#000000',
+        marginBottom: height * 0.01,
+        color: '#1e40af',
     },
     subtitle: {
-        fontSize: 16,
-        color: '#1E1E1E',
-        marginBottom: 32,
-        lineHeight: 22,
+        fontSize: width * 0.04,
+        color: '#64748b',
+        marginBottom: height * 0.04,
+        lineHeight: width * 0.06,
     },
     optionsContainer: {
-        gap: 12,
+        gap: height * 0.02,
     },
     optionButton: {
+        borderRadius: 12,
+        overflow: 'hidden',
+        borderWidth: 0.1,
+    },
+    optionGradient: {
         flexDirection: 'row',
         alignItems: 'center',
-        padding: 16,
-        backgroundColor: '#F5F5F5',
-        borderRadius: 12,
+        padding: width * 0.04,
     },
     optionButtonSelected: {
-        backgroundColor: '#EBF5FF',
+
     },
     checkbox: {
-        width: 20,
-        height: 20,
-        borderRadius: 4,
+        width: width * 0.05,
+        height: width * 0.05,
+        borderRadius: 6,
         borderWidth: 2,
-        borderColor: '#CCCCCC',
-        marginRight: 12,
+        borderColor: '#e2e8f0',
+        marginRight: width * 0.03,
         justifyContent: 'center',
         alignItems: 'center',
+        backgroundColor: '#ffffff',
     },
     checkboxSelected: {
-        borderColor: '#007AFF',
-    },
-    checkboxInner: {
-        width: 12,
-        height: 12,
-        backgroundColor: '#007AFF',
+        borderColor: '#3b82f6',
+        backgroundColor: '#3b82f6',
     },
     optionText: {
-        fontSize: 16,
-        color: '#1E1E1E',
+        fontSize: width * 0.04,
+        color: '#1e293b',
+        fontWeight: '500',
+    },
+    optionTextSelected: {
+        color: '#1e40af',
         fontWeight: '600',
     },
     buttonContainer: {
         flexDirection: 'row',
-        gap: 12,
+        gap: width * 0.03,
         position: 'absolute',
-        bottom: 40,
-        left: 24,
-        right: 24,
+        bottom: height * 0.05,
+        left: width * 0.06,
+        right: width * 0.06,
     },
     skipButton: {
         flex: 1,
-        padding: 16,
+        padding: height * 0.02,
         borderRadius: 12,
-        backgroundColor: '#F5F5F5',
+        backgroundColor: '#f8faff',
         alignItems: 'center',
+        borderWidth: 1,
+        borderColor: '#e2e8f0',
     },
     skipButtonText: {
-        fontSize: 16,
+        fontSize: width * 0.04,
         fontWeight: '600',
-        color: '#000000',
+        color: '#64748b',
     },
     continueButton: {
         flex: 1,
-        padding: 16,
         borderRadius: 12,
-        backgroundColor: '#007AFF',
+        overflow: 'hidden',
+    },
+    gradientButton: {
+        padding: height * 0.02,
         alignItems: 'center',
     },
     continueButtonDisabled: {
-        backgroundColor: '#CCCCCC',
+        opacity: 0.5,
     },
     continueButtonText: {
-        fontSize: 16,
-        fontWeight: '600',
+        fontSize: width * 0.04,
+        fontWeight: '700',
         color: '#FFFFFF',
+        letterSpacing: 0.5,
     },
 });
 
