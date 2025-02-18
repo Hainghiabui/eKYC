@@ -15,6 +15,7 @@ import {
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import Entypo from 'react-native-vector-icons/Entypo';
 import LinearGradient from 'react-native-linear-gradient';
+import { RootStackParamList } from '../../@type';
 
 const { width, height } = Dimensions.get('window');
 
@@ -22,7 +23,7 @@ const Login3Screen = () => {
     const [ password, setPassword ] = useState('');
     const [ isPasswordVisible, setIsPasswordVisible ] = useState(false);
     const [ isFocused, setIsFocused ] = useState(false);
-    const navigation = useNavigation<NavigationProp<any>>();
+    const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     const fadeAnim = useRef(new Animated.Value(0)).current;
 
     useEffect(() => {

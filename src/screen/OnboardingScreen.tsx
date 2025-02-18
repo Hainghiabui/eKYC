@@ -12,6 +12,7 @@ import {
     StatusBar,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import { RootStackParamList } from '../@type';
 
 const { width, height } = Dimensions.get('window');
 
@@ -33,7 +34,7 @@ const BackgroundCircles = () => (
 );
 
 const OnboardingScreen = () => {
-    const navigation = useNavigation<NavigationProp<any>>();
+    const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     const fadeAnim = useRef(new Animated.Value(0)).current;
     const slideAnim = useRef(new Animated.Value(50)).current;
     const scaleAnim = useRef(new Animated.Value(0.9)).current;

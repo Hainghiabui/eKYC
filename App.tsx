@@ -8,7 +8,8 @@ import GetStartedScreen from './src/screen/GetStartedScreen';
 import VerifyIdentityScreen from './src/screen/VerifyIdentityScreen';
 import ProofOfResidencyScreen from './src/screen/ProofOfResidencyScreen';
 import VerifyDataScreen from './src/screen/VerifyDataScreen';
-// import CCCDScanScreen from './src/screen/CCCDScanScreen';
+import ProfileScreen from './src/screen/ProfileScreen';
+import AccountPin from './src/screen/AccountPin';
 
 
 const Stack = createNativeStackNavigator();
@@ -24,7 +25,9 @@ export default function App() {
         <Stack.Screen name="GetStartedScreen" component={GetStartedScreen} />
         <Stack.Screen name="VerifyIdentityScreen" component={VerifyIdentityScreen} />
         <Stack.Screen name="ProofOfResidencyScreen" component={ProofOfResidencyScreen} />
-        <Stack.Screen name="VerifyData" component={VerifyDataScreen} />
+        <Stack.Screen name="VerifyDatascreen" component={VerifyDataScreen} />
+        <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
+        <Stack.Screen name="AccountPin" component={AccountPin} />
       </Stack.Navigator>
     </NavigationContainer>
   );

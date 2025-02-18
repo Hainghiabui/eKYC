@@ -11,11 +11,12 @@ import {
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import LinearGradient from 'react-native-linear-gradient';
+import { RootStackParamList } from '../../@type';
 
 const { width, height } = Dimensions.get('window');
 
 const Login1Screen = () => {
-    const navigation = useNavigation<NavigationProp<any>>();
+    const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
     const handleFacebookLogin = () => {
         console.log('Facebook login pressed');

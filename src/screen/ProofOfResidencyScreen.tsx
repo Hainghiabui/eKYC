@@ -17,7 +17,9 @@ import LinearGradient from 'react-native-linear-gradient';
 import { checkCameraPermission } from '../utils/permissions';
 import { launchCamera } from 'react-native-image-picker';
 import textRecognition from '@react-native-ml-kit/text-recognition';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { RootStackParamList } from '../@type';
+import ScanFrame from '../components/scanner/ScanFrame';
+import type { CCCDData } from '../@type';
 
 const { width, height } = Dimensions.get('window');
 
@@ -41,11 +43,12 @@ const verificationMethods = [
 
 const ProofOfResidencyScreen = () => {
     const [ selectedMethod, setSelectedMethod ] = useState(0);
-    const navigation = useNavigation<NavigationProp<any>>();
+    const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     const fadeAnim = useRef(new Animated.Value(0)).current;
     const slideAnim = useRef(new Animated.Value(50)).current;
     const [ cccdText, setCccdText ] = useState('');
     const [ hasPermission, setHasPermission ] = useState(false);
+    const [ showScanFrame, setShowScanFrame ] = useState(false);
 
     useEffect(() => {
         checkPermissions();
@@ -72,6 +75,47 @@ const ProofOfResidencyScreen = () => {
         ]).start();
     }, []);
 
+    const handleCapture = async (uri: string) => {
+        setShowScanFrame(false);
+
+        try {
+            const result = await textRecognition.recognize(uri);
+            console.log(result.text);
+
+            // Extract CCCD information
+            const cccdInfo: Partial<CCCDData> = {
+                idNumber: extractValue(result.text, /(?:No)[:.\s]*(\d{12})/i),
+                fullName: extractValue(result.text, /(?:Name)[:.\s]*([^\n]+)/i),
+                dateOfBirth: extractValue(result.text, /(?:Date of birth)[:.\s]*(\d{2}\/\d{2}\/\d{4})/i),
+                sex: extractValue(result.text, /(?:Sex)[:.\s]*([^\n]+)/i),
+                nationality: extractValue(result.text, /(?:Nationality)[:.\s]*([^\n]+)/i),
+                placeOfOrigin: extractValue(result.text, /(?:Place of origin)[:.\s]*([^\n]+)/i),
+                placeOfResidence: extractValue(result.text, /(?:Place of residence)[:.\s]*([^\n]+)/i),
+                // dateOfExpiry: extractValue(result.text, /(?:Có giá trị đến)[:.\s]*(\d{2}\/\d{2}\/\d{4})/i),
+            };
+
+            // Validate required fields
+            const missingFields = validateCCCDInfo(cccdInfo);
+
+            if (missingFields.length > 0) {
+                Alert.alert(
+                    'Thiếu thông tin',
+                    `Không thể nhận diện các thông tin sau:\n${missingFields.join('\n')}`,
+                    [
+                        { text: 'Quét lại', onPress: () => setShowScanFrame(true) },
+                        { text: 'Hủy', style: 'cancel' }
+                    ]
+                );
+                return;
+            }
+
+            // If all fields are present, navigate to result screen
+            navigation.navigate('VerifyDatascreen', { cccdInfo: cccdInfo as CCCDData });
+
+        } catch (error) {
+            Alert.alert('Lỗi', 'Không thể nhận diện văn bản từ ảnh');
+        }
+    };
 
     const scanCCCD = async () => {
         if (!hasPermission) {
@@ -86,27 +130,7 @@ const ProofOfResidencyScreen = () => {
             return;
         }
 
-        const result = await launchCamera({
-            mediaType: 'photo',
-            includeBase64: true,
-            quality: 0.8,
-            saveToPhotos: false,
-        });
-
-        if (result.didCancel || !result.assets?.[ 0 ]?.uri) {
-            return;
-        }
-
-        // Handle the captured image here
-        const imagePath = result.assets[ 0 ].uri;
-        try {
-            const result = await textRecognition.recognize(imagePath);
-            setCccdText(result.text);
-            // Handle the extracted text as needed
-            console.log('Extracted text:', result.text);
-        } catch (error) {
-            Alert.alert('Error', 'Failed to recognize text from image');
-        }
+        setShowScanFrame(true);
     };
 
     return (
@@ -217,8 +241,38 @@ const ProofOfResidencyScreen = () => {
                     </TouchableOpacity>
                 </View>
             </Animated.View>
+
+            {showScanFrame && (
+                <ScanFrame
+                    onClose={() => setShowScanFrame(false)}
+                    method={verificationMethods[ selectedMethod ].id}
+                    onCapture={handleCapture}
+                />
+            )}
         </SafeAreaView>
     );
+};
+
+const extractValue = (text: string, regex: RegExp): string => {
+    const match = text.match(regex);
+    return match?.[ 1 ]?.trim() || '';
+};
+
+const validateCCCDInfo = (info: Partial<CCCDData>): string[] => {
+    const requiredFields: { [ key in keyof CCCDData ]: string } = {
+        idNumber: 'Số CCCD',
+        fullName: 'Họ và tên',
+        dateOfBirth: 'Ngày sinh',
+        sex: 'Giới tính',
+        nationality: 'Quốc tịch',
+        placeOfOrigin: 'Quê quán',
+        placeOfResidence: 'Nơi thường trú',
+        // dateOfExpiry: 'Giá trị đến'
+    };
+
+    return Object.entries(requiredFields)
+        .filter(([ key ]) => !info[ key as keyof CCCDData ])
+        .map(([ _, label ]) => `- ${label}`);
 };
 
 const styles = StyleSheet.create({

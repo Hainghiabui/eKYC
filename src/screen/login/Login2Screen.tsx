@@ -13,13 +13,14 @@ import {
 } from 'react-native';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import LinearGradient from 'react-native-linear-gradient';
+import { RootStackParamList } from '../../@type';
 
 const { width, height } = Dimensions.get('window');
 
 const Login2Screen = () => {
     const [ email, setEmail ] = useState('');
     const [ isFocused, setIsFocused ] = useState(false);
-    const navigation = useNavigation<NavigationProp<any>>();
+    const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
     const handleSubmit = () => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

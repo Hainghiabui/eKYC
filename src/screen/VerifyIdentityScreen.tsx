@@ -12,11 +12,12 @@ import {
 } from 'react-native';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import LinearGradient from 'react-native-linear-gradient';
+import { RootStackParamList } from '../@type';
 
 const { width, height } = Dimensions.get('window');
 
 const VerifyIdentityScreen = () => {
-    const navigation = useNavigation<NavigationProp<any>>();
+    const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     const fadeAnim = useRef(new Animated.Value(0)).current;
     const slideAnim = useRef(new Animated.Value(50)).current;
 

@@ -1,30 +1,16 @@
-import { Platform } from 'react-native';
-import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
+import { PermissionsAndroid, Platform } from 'react-native';
 
 export const checkCameraPermission = async () => {
-    try {
-        const permission = Platform.select({
-            android: PERMISSIONS.ANDROID.CAMERA,
-            ios: PERMISSIONS.IOS.CAMERA,
-        });
-
-        if (!permission) {
-            throw new Error('Permission is not defined');
+    if (Platform.OS === 'android') {
+        const granted = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.CAMERA);
+        if (granted) {
+            return true;
+        } else {
+            const request = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.CAMERA);
+            return request === PermissionsAndroid.RESULTS.GRANTED;
         }
-
-        const result = await check(permission);
-
-        switch (result) {
-            case RESULTS.GRANTED:
-                return true;
-            case RESULTS.DENIED:
-                const requestResult = await request(permission);
-                return requestResult === RESULTS.GRANTED;
-            default:
-                return false;
-        }
-    } catch (error) {
-        console.error('Permission check failed:', error);
-        return false;
+    } else {
+        // For iOS, permissions are handled differently
+        return true; // Assume permission is granted for iOS
     }
 };

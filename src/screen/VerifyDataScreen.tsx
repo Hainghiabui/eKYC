@@ -8,26 +8,29 @@ import {
     ScrollView,
     Dimensions,
 } from 'react-native';
-import { NavigationProp, useNavigation, useRoute } from '@react-navigation/native';
+import { NavigationProp, RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import LinearGradient from 'react-native-linear-gradient';
+import { RootStackParamList } from '../@type';
 
 const { width, height } = Dimensions.get('window');
+type ProfileScreenRouteProp = RouteProp<RootStackParamList, 'ProfileScreen'>;
 
 const VerifyDataScreen = () => {
-    const navigation = useNavigation<NavigationProp<any>>();
-    const route = useRoute();
-    const { cccdData } = route.params as any;
+    const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+    const route = useRoute<ProfileScreenRouteProp>();
+    const { cccdInfo } = route.params;
 
+    console.log(cccdInfo);
     const fields = [
-        { label: 'Số CCCD', value: cccdData.idNumber },
-        { label: 'Họ và tên', value: cccdData.fullName },
-        { label: 'Ngày sinh', value: cccdData.dateOfBirth },
-        { label: 'Giới tính', value: cccdData.gender },
-        { label: 'Quốc tịch', value: cccdData.nationality },
-        { label: 'Quê quán', value: cccdData.hometown },
-        { label: 'Nơi thường trú', value: cccdData.address },
-        { label: 'Có giá trị đến', value: cccdData.expiryDate },
+        { label: 'Số CCCD', value: cccdInfo.idNumber },
+        { label: 'Họ và tên', value: cccdInfo.fullName },
+        { label: 'Ngày sinh', value: cccdInfo.dateOfBirth },
+        { label: 'Giới tính', value: cccdInfo.sex },
+        { label: 'Quốc tịch', value: cccdInfo.nationality },
+        { label: 'Quê quán', value: cccdInfo.placeOfOrigin },
+        { label: 'Nơi thường trú', value: cccdInfo.placeOfResidence },
+        // { label: 'Có giá trị đến', value: cccdInfo.dateOfExpiry },
     ];
 
     return (
