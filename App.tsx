@@ -5,6 +5,10 @@ import Login1Screen from './src/screen/login/Login1Screen';
 import Login2Screen from './src/screen/login/Login2Screen';
 import Login3Screen from './src/screen/login/Login3Screen';
 import GetStartedScreen from './src/screen/GetStartedScreen';
+import VerifyIdentityScreen from './src/screen/VerifyIdentityScreen';
+import ProofOfResidencyScreen from './src/screen/ProofOfResidencyScreen';
+import VerifyDataScreen from './src/screen/VerifyDataScreen';
+// import CCCDScanScreen from './src/screen/CCCDScanScreen';
 
 
 const Stack = createNativeStackNavigator();
@@ -13,11 +17,14 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Onboarding" component={OnboardingScreen} />
+        <Stack.Screen name="OnboardingScreen" component={OnboardingScreen} />
         <Stack.Screen name="Login1" component={Login1Screen} />
         <Stack.Screen name="Login2" component={Login2Screen} />
         <Stack.Screen name="Login3" component={Login3Screen} />
         <Stack.Screen name="GetStartedScreen" component={GetStartedScreen} />
+        <Stack.Screen name="VerifyIdentityScreen" component={VerifyIdentityScreen} />
+        <Stack.Screen name="ProofOfResidencyScreen" component={ProofOfResidencyScreen} />
+        <Stack.Screen name="VerifyData" component={VerifyDataScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

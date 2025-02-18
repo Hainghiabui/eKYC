@@ -29,7 +29,7 @@ const GetStartedScreen = () => {
 
     const handleContinue = () => {
         if (selectedOption !== null) {
-
+            navigation.navigate('VerifyIdentityScreen');
         }
     };
 
