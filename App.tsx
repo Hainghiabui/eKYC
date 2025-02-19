@@ -10,12 +10,14 @@ import ProofOfResidencyScreen from './src/screen/ProofOfResidencyScreen';
 import VerifyDataScreen from './src/screen/VerifyDataScreen';
 import ProfileScreen from './src/screen/ProfileScreen';
 import AccountPin from './src/screen/AccountPin';
+import RegisterScreen from './src/screen/RegisterScreen';
 
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
+
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="OnboardingScreen" component={OnboardingScreen} />
@@ -28,6 +30,7 @@ export default function App() {
         <Stack.Screen name="VerifyDatascreen" component={VerifyDataScreen} />
         <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
         <Stack.Screen name="AccountPin" component={AccountPin} />
+        <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
