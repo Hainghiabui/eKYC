@@ -1,4 +1,4 @@
-import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { NavigationProp, RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import React, { useState, useRef, useEffect } from 'react';
 import {
     View,
@@ -18,6 +18,8 @@ import LinearGradient from 'react-native-linear-gradient';
 import { RootStackParamList } from '../../@type';
 
 const { width, height } = Dimensions.get('window');
+type Login3RouteProp = RouteProp<RootStackParamList, 'Login3'>;
+
 
 const Login3Screen = () => {
     const [ password, setPassword ] = useState('');
@@ -25,6 +27,9 @@ const Login3Screen = () => {
     const [ isFocused, setIsFocused ] = useState(false);
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     const fadeAnim = useRef(new Animated.Value(0)).current;
+    const route = useRoute<Login3RouteProp>();
+    const user = { name: route.params.name, email: route.params.email, photoURL: route.params?.photoURL };
+    console.log(user);
 
     useEffect(() => {
         Animated.timing(fadeAnim, {
@@ -35,10 +40,10 @@ const Login3Screen = () => {
     }, []);
 
     const handleSubmit = () => {
-        if (!password) {
-            Alert.alert('Thông báo', 'Vui lòng nhập mật khẩu của bạn.');
-            return;
-        }
+        // if (!password) {
+        //     Alert.alert('Thông báo', 'Vui lòng nhập mật khẩu của bạn.');
+        //     return;
+        // }
         navigation.navigate("GetStartedScreen");
     };
 
@@ -64,18 +69,18 @@ const Login3Screen = () => {
                         style={styles.avatarWrapper}
                     >
                         <Image
-                            source={require('../../assets/images/avatar.png')}
+                            source={user.photoURL ? { uri: user.photoURL } : require('../../assets/images/avatar.png')}
                             style={styles.avatar}
                         />
                     </LinearGradient>
-                    <Text style={styles.title}>Xin chào!</Text>
+                    <Text style={styles.title}>Xin chào {user.name}!</Text>
                     <Text style={styles.email}>
-                        Thành viên VIP | bhn123@email.com
+                        {user.email}
                     </Text>
                 </View>
 
                 <View style={styles.formContainer}>
-                    <View style={styles.inputContainer}>
+                    {/* <View style={styles.inputContainer}>
                         <TextInput
                             style={[
                                 styles.input,
@@ -101,7 +106,7 @@ const Login3Screen = () => {
                                 color="#94a3b8"
                             />
                         </TouchableOpacity>
-                    </View>
+                    </View> */}
 
                     <TouchableOpacity
                         style={styles.submitButton}
@@ -114,7 +119,7 @@ const Login3Screen = () => {
                             end={{ x: 1, y: 0 }}
                             style={styles.gradientButton}
                         >
-                            <Text style={styles.submitButtonText}>ĐĂNG NHẬP</Text>
+                            <Text style={styles.submitButtonText}>TIẾP TỤC</Text>
                         </LinearGradient>
                     </TouchableOpacity>
                 </View>

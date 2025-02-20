@@ -2,13 +2,12 @@ import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 
 const firebaseConfig = {
-    apiKey: "AIzaSyBJg3QEuw9bH0mUfKoYDLPPAwcXux7UqAQ",
-    authDomain: "android-app-3f01b.firebaseapp.com",
-    projectId: "android-app-3f01b",
-    storageBucket: "android-app-3f01b.firebasestorage.app",
-    messagingSenderId: "943505236628",
-    appId: "1:943505236628:web:d41376c1c0e4dc9a154a81",
-    measurementId: "G-T9XZDV5EWP"
+    apiKey: "AIzaSyCY51w0BaxLhIs7cNdJibyV0h_E6_e9T4g",
+    authDomain: "app-android-838b9.firebaseapp.com",
+    projectId: "app-android-838b9",
+    storageBucket: "app-android-838b9.firebasestorage.app",
+    messagingSenderId: "40403319273",
+    appId: "1:40403319273:android:5a2e05a24ee78c65bcf378",
 };
 
 

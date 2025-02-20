@@ -34,7 +34,7 @@ const Login3Screen = () => {
         try {
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
             console.log('Logged in user:', userCredential.user);
-            navigation.navigate('Login3');
+            navigation.navigate('Login3', { name: userCredential.user?.displayName, email: userCredential.user?.email });
         } catch (error: any) {
             let errorMessage = 'Đã có lỗi xảy ra khi đăng nhập.';
             if (error.code === 'auth/invalid-credential') {

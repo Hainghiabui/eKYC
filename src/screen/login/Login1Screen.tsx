@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
     View,
     Text,
@@ -12,18 +12,58 @@ import { NavigationProp, useNavigation } from '@react-navigation/native';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import LinearGradient from 'react-native-linear-gradient';
 import { RootStackParamList } from '../../@type';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import auth from '@react-native-firebase/auth';
+import { LoginManager, AccessToken } from "react-native-fbsdk-next";
 
 const { width, height } = Dimensions.get('window');
 
 const Login1Screen = () => {
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
-    const handleFacebookLogin = () => {
-        console.log('Facebook login pressed');
+    useEffect(() => {
+        async function init() {
+            const has = await GoogleSignin.hasPlayServices();
+            if (has) {
+                GoogleSignin.configure({
+                    offlineAccess: true,
+                    webClientId: '943505236628-jh010oenbqip8kt91v3knhns1ei5k5ml.apps.googleusercontent.com',
+                });
+            }
+        }
+        init();
+    }, []);
+
+    const handleFacebookLogin = async () => {
+        console.log("Facebook login start");
+        try {
+            // 1. Mở popup Facebook login
+            const result = await LoginManager.logInWithPermissions([ "public_profile", "email" ]);
+            if (result.isCancelled) {
+                console.log("Login cancelled");
+                return;
+            }
+
+            // 2. Lấy token từ Facebook
+            const data = await AccessToken.getCurrentAccessToken();
+            if (!data) {
+                console.log("Something went wrong getting the access token");
+                return;
+            }
+
+            // 3. Tạo credential Firebase từ token Facebook
+            const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
+
+            // 4. Đăng nhập Firebase bằng credential Facebook
+            const userCredential = await auth().signInWithCredential(facebookCredential);
+            navigation.navigate('Login3', { name: userCredential.user?.displayName, email: userCredential.user?.email, photoURL: userCredential.user?.photoURL });
+        } catch (error) {
+            console.error("Facebook login error:", error);
+        }
     };
 
-    const handleGoogleLogin = () => {
-        console.log('Google login pressed');
+    const handleGoogleLogin = async () => {
+
     };
 
     const handlePasswordLogin = () => {

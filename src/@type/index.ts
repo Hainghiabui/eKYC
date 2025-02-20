@@ -5,6 +5,11 @@ type RootStackParamList = ParamListBase & {
     ProfileScreen: {
         cccdInfo: CCCDData;
     };
+    Login3: {
+        name: string;
+        email: string;
+        photoURL?: string;
+    }
 }
 interface CCCDData {
     idNumber: string;
