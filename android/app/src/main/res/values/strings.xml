@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">eKYC</string>
+    <string name="default_web_client_id">943505236628-jh010oenbqip8kt91v3knhns1ei5k5ml.apps.googleusercontent.com</string>
+    <string name="facebook_app_id">611364895005066</string>
+    <string name="fb_login_protocol_scheme">fb611364895005066</string>
+    <string name="facebook_client_token">61f69caa9f5ad0abc4da78cb3468d794</string>
+</resources>
