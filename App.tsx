@@ -11,6 +11,8 @@ import VerifyDataScreen from './src/screen/VerifyDataScreen';
 import ProfileScreen from './src/screen/ProfileScreen';
 import AccountPin from './src/screen/AccountPin';
 import RegisterScreen from './src/screen/RegisterScreen';
+import VerifyFaceId from './src/screen/VerifyFaceId';
+import FaceComparisonResultScreen from './src/screen/FaceComparisonResultScreen';
 
 
 const Stack = createNativeStackNavigator();
@@ -31,6 +33,10 @@ export default function App() {
         <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
         <Stack.Screen name="AccountPin" component={AccountPin} />
         <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
+        <Stack.Screen name="VerifyFaceId" component={VerifyFaceId} />
+        <Stack.Screen name="FaceComparisonResult" component={FaceComparisonResultScreen} />
+
+
       </Stack.Navigator>
     </NavigationContainer>
   );

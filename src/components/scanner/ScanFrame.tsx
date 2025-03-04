@@ -5,6 +5,7 @@ import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import LinearGradient from 'react-native-linear-gradient';
 import ScanOverlay from './ScanOverlay';
 import { SCAN_AREA_WIDTH, SCAN_AREA_HEIGHT, SCAN_AREA_TOP } from './ScanOverlay';
+import { PhotoManipulator } from 'react-native-photo-manipulator';
 
 const { width, height } = Dimensions.get('window');
 
@@ -22,7 +23,8 @@ const ScanFrame: React.FC<ScanFrameProps> = ({ onClose, method, onCapture }) => 
             if (cameraRef.current) {
                 const image = await cameraRef.current.capture();
                 if (image?.uri) {
-                    onCapture(image.uri);
+
+                    onCapture(image?.uri);
                 }
             }
         } catch (error) {
@@ -68,7 +70,7 @@ const ScanFrame: React.FC<ScanFrameProps> = ({ onClose, method, onCapture }) => 
                 top: SCAN_AREA_TOP,
                 width: SCAN_AREA_WIDTH,
                 height: SCAN_AREA_HEIGHT,
-                left: (width - SCAN_AREA_WIDTH) / 2
+                left: (width - SCAN_AREA_WIDTH) / 2,
             } ]}>
                 <View style={styles.frame}>
                     <View style={styles.cornerTL} />

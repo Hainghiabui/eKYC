@@ -91,6 +91,7 @@ const ProofOfResidencyScreen = () => {
                 nationality: extractValue(result.text, /(?:Nationality)[:.\s]*([^\n]+)/i),
                 placeOfOrigin: extractValue(result.text, /(?:Place of origin)[:.\s]*([^\n]+)/i),
                 placeOfResidence: extractValue(result.text, /(?:Place of residence)[:.\s]*([^\n]+)/i),
+                image: uri,
                 // dateOfExpiry: extractValue(result.text, /(?:Có giá trị đến)[:.\s]*(\d{2}\/\d{2}\/\d{4})/i),
             };
 
@@ -267,6 +268,7 @@ const validateCCCDInfo = (info: Partial<CCCDData>): string[] => {
         nationality: 'Quốc tịch',
         placeOfOrigin: 'Quê quán',
         placeOfResidence: 'Nơi thường trú',
+        image: 'Ảnh CCCD',
         // dateOfExpiry: 'Giá trị đến'
     };
 

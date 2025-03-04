@@ -9,13 +9,12 @@ import {
     TextInput,
     Dimensions,
     Image,
-    Alert,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { auth } from '../../firebase/config';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
-
+import { showToast } from '../../utils/toast';
 const { width, height } = Dimensions.get('window');
 
 const Login3Screen = () => {
@@ -25,22 +24,41 @@ const Login3Screen = () => {
     const [ isFocused, setIsFocused ] = useState({ email: false, password: false });
     const navigation = useNavigation<NavigationProp<any>>();
 
+
     const handleLogin = async () => {
         if (!email || !password) {
-            Alert.alert('Thông báo', 'Vui lòng nhập đầy đủ thông tin.');
+            showToast('error', 'Thông báo', 'Vui lòng nhập đầy đủ thông tin.');
             return;
         }
 
         try {
-            const userCredential = await signInWithEmailAndPassword(auth, email, password);
-            console.log('Logged in user:', userCredential.user);
-            navigation.navigate('Login3', { name: userCredential.user?.displayName, email: userCredential.user?.email });
+            const { user } = await signInWithEmailAndPassword(auth, email, password);
+
+            if (!user.emailVerified) {
+                const handleResendVerification = async () => {
+                    try {
+                        await sendEmailVerification(user);
+                        showToast('success', 'Thông báo', 'Email xác minh đã được gửi lại.');
+                    } catch (error) {
+                        showToast('error', 'Lỗi', 'Không thể gửi lại email xác minh.');
+                    }
+                };
+
+                showToast('info', 'Thông báo', 'Email của bạn chưa được xác minh.');
+                handleResendVerification();
+                return;
+            }
+
+            navigation.navigate('Login3', {
+                name: user.displayName,
+                email: user.email
+            });
         } catch (error: any) {
             let errorMessage = 'Đã có lỗi xảy ra khi đăng nhập.';
             if (error.code === 'auth/invalid-credential') {
                 errorMessage = 'Email hoặc mật khẩu không đúng.';
             }
-            Alert.alert('Lỗi', errorMessage);
+            showToast('error', 'Lỗi', errorMessage);
         }
     };
 

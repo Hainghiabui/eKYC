@@ -7,6 +7,7 @@ import {
     TouchableOpacity,
     ScrollView,
     Dimensions,
+    Image,
 } from 'react-native';
 import { NavigationProp, RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
@@ -20,7 +21,7 @@ const VerifyDataScreen = () => {
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     const route = useRoute<ProfileScreenRouteProp>();
     const { cccdInfo } = route.params;
-
+    console.log('cccdInfo', cccdInfo.image);
     console.log(cccdInfo);
     const fields = [
         { label: 'Số CCCD', value: cccdInfo.idNumber },
@@ -52,7 +53,7 @@ const VerifyDataScreen = () => {
                 <Text style={styles.subtitle}>
                     Vui lòng kiểm tra lại thông tin được trích xuất từ CCCD của bạn
                 </Text>
-
+                {/* <Image source={{ uri: cccdInfo.image }} style={{ width: width * 0.8, height: width * 0.5, borderRadius: 12 }} /> */}
                 <ScrollView style={styles.fieldsContainer}>
                     {fields.map((field, index) => (
                         <View key={index} style={styles.fieldGroup}>
@@ -74,7 +75,7 @@ const VerifyDataScreen = () => {
 
                     <TouchableOpacity
                         style={styles.confirmButton}
-                        onPress={() => navigation.navigate('FaceVerification')}
+                        onPress={() => navigation.navigate('VerifyFaceId', { idCardImage: cccdInfo.image })}
                     >
                         <LinearGradient
                             colors={[ '#1e40af', '#3b82f6' ]}
