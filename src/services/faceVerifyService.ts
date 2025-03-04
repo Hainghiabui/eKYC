@@ -2,7 +2,7 @@ import { Platform } from 'react-native';
 import FormData from 'form-data';
 import axios from 'axios';
 
-const API_URL = 'http://192.168.0.108:5000'; // Use 10.0.2.2 for Android emulator, localhost for iOS
+const API_URL = 'http://192.168.100.24:5000'; // Use 10.0.2.2 for Android emulator, localhost for iOS
 
 export type FaceComparisonResult = {
     similarity: number;

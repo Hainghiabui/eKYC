@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import {
     View, Text, StyleSheet, TextInput, TouchableOpacity,
-    SafeAreaView, Dimensions, Alert, Animated, Keyboard
+    SafeAreaView, Dimensions, Animated, Keyboard
 } from 'react-native';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
@@ -9,11 +9,14 @@ import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import { createUserWithEmailAndPassword, updateProfile, sendEmailVerification } from 'firebase/auth';
 import { auth } from '../firebase/config';
 import { RootStackParamList } from '../@type';
+import { useToast } from '../context/ToastContext';
+import { formatErrorMessage } from '../utils/toast';
 
 const { width, height } = Dimensions.get('window');
 
 const RegisterScreen = () => {
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+    const { showToast } = useToast();
     const [ formData, setFormData ] = useState({
         fullName: '',
         email: '',
@@ -70,17 +73,10 @@ const RegisterScreen = () => {
             await updateProfile(userCredential.user, { displayName: fullName });
             await sendEmailVerification(userCredential.user);
 
-            Alert.alert(
-                'Xác thực email',
-                'Vui lòng kiểm tra email để xác thực tài khoản của bạn.',
-                [ { text: 'OK', onPress: () => navigation.navigate('Login2') } ]
-            );
+            showToast('success', 'Đăng ký thành công', 'Vui lòng kiểm tra email để xác thực tài khoản của bạn.');
+            navigation.navigate('Login2');
         } catch (error: any) {
-            let message = 'Đã có lỗi xảy ra';
-            if (error.code === 'auth/email-already-in-use') {
-                message = 'Email này đã được sử dụng';
-            }
-            Alert.alert('Lỗi', message);
+            showToast('error', 'Lỗi đăng ký', formatErrorMessage(error));
         } finally {
             setLoading(false);
         }
@@ -89,19 +85,19 @@ const RegisterScreen = () => {
     const validateForm = () => {
         const { fullName, email, password, confirmPassword } = formData;
         if (!fullName.trim()) {
-            Alert.alert('Lỗi', 'Vui lòng nhập họ và tên');
+            showToast('error', 'Lỗi', 'Vui lòng nhập họ và tên');
             return false;
         }
         if (!email.trim() || !/\S+@\S+\.\S+/.test(email)) {
-            Alert.alert('Lỗi', 'Vui lòng nhập email hợp lệ');
+            showToast('error', 'Lỗi', 'Vui lòng nhập email hợp lệ');
             return false;
         }
         if (password.length < 6) {
-            Alert.alert('Lỗi', 'Mật khẩu phải có ít nhất 6 ký tự');
+            showToast('error', 'Lỗi', 'Mật khẩu phải có ít nhất 6 ký tự');
             return false;
         }
         if (password !== confirmPassword) {
-            Alert.alert('Lỗi', 'Mật khẩu xác nhận không khớp');
+            showToast('error', 'Lỗi', 'Mật khẩu xác nhận không khớp');
             return false;
         }
         return true;

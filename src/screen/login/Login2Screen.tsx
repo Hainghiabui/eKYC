@@ -14,7 +14,8 @@ import LinearGradient from 'react-native-linear-gradient';
 import { signInWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { auth } from '../../firebase/config';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
-import { showToast } from '../../utils/toast';
+import { useToast } from '../../context/ToastContext'; // Import useToast hook
+import { formatErrorMessage } from '../../utils/toast';
 const { width, height } = Dimensions.get('window');
 
 const Login3Screen = () => {
@@ -23,7 +24,7 @@ const Login3Screen = () => {
     const [ isPasswordVisible, setIsPasswordVisible ] = useState(false);
     const [ isFocused, setIsFocused ] = useState({ email: false, password: false });
     const navigation = useNavigation<NavigationProp<any>>();
-
+    const { showToast } = useToast(); // Use the toast hook
 
     const handleLogin = async () => {
         if (!email || !password) {
@@ -40,7 +41,8 @@ const Login3Screen = () => {
                         await sendEmailVerification(user);
                         showToast('success', 'Thông báo', 'Email xác minh đã được gửi lại.');
                     } catch (error) {
-                        showToast('error', 'Lỗi', 'Không thể gửi lại email xác minh.');
+                        // Show formatted error message
+                        showToast('error', 'Lỗi', formatErrorMessage(error));
                     }
                 };
 
@@ -49,16 +51,14 @@ const Login3Screen = () => {
                 return;
             }
 
+            showToast('success', 'Đăng nhập thành công', 'Chào mừng trở lại!');
             navigation.navigate('Login3', {
                 name: user.displayName,
                 email: user.email
             });
         } catch (error: any) {
-            let errorMessage = 'Đã có lỗi xảy ra khi đăng nhập.';
-            if (error.code === 'auth/invalid-credential') {
-                errorMessage = 'Email hoặc mật khẩu không đúng.';
-            }
-            showToast('error', 'Lỗi', errorMessage);
+            // Use our formatErrorMessage utility to get a safe string representation
+            showToast('error', 'Lỗi đăng nhập', formatErrorMessage(error));
         }
     };
 
