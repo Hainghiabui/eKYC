@@ -44,17 +44,11 @@ const GetStartedScreen = () => {
                 colors={[ '#ffffff', '#f8faff' ]}
                 style={StyleSheet.absoluteFill}
             />
-            <TouchableOpacity
-                style={styles.backButton}
-                onPress={() => navigation.goBack()}
-            >
-                <FontAwesome6 name="arrow-left-long" size={24} color="#1e40af" />
-            </TouchableOpacity>
 
             <View style={styles.content}>
                 <Text style={styles.title}>Bắt đầu</Text>
                 <Text style={styles.subtitle}>
-                    Hãy cho chúng tôi biết lý do chính bạn sử dụng ứng dụng FintechX.
+                    Hãy cho chúng tôi biết lý do chính bạn sử dụng ứng dụng.
                 </Text>
 
                 <View style={styles.optionsContainer}>
@@ -97,7 +91,7 @@ const GetStartedScreen = () => {
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity
                         style={styles.skipButton}
-                        onPress={() => navigation.navigate('NextScreen')}
+                        onPress={() => navigation.navigate('VerifyIdentityScreen')}
                     >
                         <Text style={styles.skipButtonText}>BỎ QUA</Text>
                     </TouchableOpacity>
@@ -140,7 +134,7 @@ const styles = StyleSheet.create({
     content: {
         flex: 1,
         paddingHorizontal: width * 0.06,
-        paddingTop: height * 0.08,
+        paddingTop: height * 0.02,
     },
     title: {
         fontSize: width * 0.08,
